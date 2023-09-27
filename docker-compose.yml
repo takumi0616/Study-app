@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  app:
+    container_name: next-prisma-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+      - "5555:5555"
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres:13
+    container_name: next-prisma-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
